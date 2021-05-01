@@ -44,3 +44,28 @@ SELECT ntile,
 FROM sub2
 GROUP BY 1
 ORDER BY 1;
+
+/* Question 3: */
+WITH sub AS
+  (SELECT f.title AS film_title,
+          c.name AS category_name,
+          f.rental_duration,
+          NTILE(4)OVER(ORDER BY f.rental_duration) AS standard_quartile
+   FROM film AS f
+   JOIN film_category AS fc ON f.film_id = fc.film_id
+   JOIN category AS c ON c.category_id = fc.category_id),
+     sub2 AS
+  (SELECT *
+   FROM sub
+   WHERE category_name = 'Animation'
+     OR category_name = 'Children'
+     OR category_name = 'Classics'
+     OR category_name = 'Comedy'
+     OR category_name = 'Family'
+     OR category_name = 'Music')
+SELECT category_name,
+       standard_quartile,
+       COUNT(*)
+FROM sub2
+GROUP BY 1,2
+ORDER BY 1,2;
