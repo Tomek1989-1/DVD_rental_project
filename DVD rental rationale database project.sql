@@ -69,3 +69,18 @@ SELECT category_name,
 FROM sub2
 GROUP BY 1,2
 ORDER BY 1,2;
+
+/* Question 4: */
+WITH sub AS
+  (SELECT DATE_TRUNC('month', r.rental_date) AS date,
+          store.store_id AS store_id
+   FROM rental AS r
+   JOIN staff AS s ON s.staff_id = r.staff_id
+   JOIN store ON store.store_id = s.store_id)
+SELECT DATE_PART('month',date) AS MONTH,
+       DATE_PART('year',date) AS YEAR,
+       store_id,
+       COUNT(*)
+FROM sub
+GROUP BY 3,2,1
+ORDER BY 2,1;
